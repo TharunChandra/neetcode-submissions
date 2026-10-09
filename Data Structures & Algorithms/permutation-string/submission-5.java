@@ -1,21 +1,42 @@
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        Map<Character, Integer> map = new HashMap<>();
-        for(int i=0;i<s1.length();i++){
-            map.put(s1.charAt(i), map.getOrDefault(s1.charAt(i),0)+1);
+        if(s1.length()>s2.length()) {
+            return false;
         }
-        System.out.println("map : "+map.toString());
-        for(int l=0,r=s1.length();r<=s2.length();l++,r++){
-            System.out.println("hi");
-            Map<Character, Integer> res = new HashMap<>();
-            for(int i=l;i<r;i++){
-                res.put(s2.charAt(i), res.getOrDefault(s2.charAt(i),0)+1);
+
+        int[] s1C = new int[26];
+        int[] s2C = new int[26];
+
+        for(int i=0;i<s1.length();i++) {
+            s1C[s1.charAt(i)-'a']++;
+            s2C[s2.charAt(i)-'a']++;
+        }
+        int match = 0;
+        for(int i=0;i<26;i++) {
+            if(s1C[i]==s2C[i]) {
+                match++;
             }
-            System.out.println("res : "+res.toString());
-            if(map.equals(res)){
+        }
+        for (int i=s1.length(),l=0;i<s2.length();i++,l++){
+            if(match==26){
                 return true;
             }
+
+            int idx = s2.charAt(l)-'a';
+            s2C[idx]--;
+            if(s1C[idx]==s2C[idx]) {
+                match++;
+            } else if(s1C[idx]-1==s2C[idx]){
+                match--;
+            }
+            idx = s2.charAt(i)-'a';
+            s2C[idx]++;
+            if(s1C[idx]==s2C[idx]) {
+                match++;
+            } else if(s1C[idx]+1==s2C[idx]){
+                match--;
+            }
         }
-        return false;
+        return match==26;
     }
 }
